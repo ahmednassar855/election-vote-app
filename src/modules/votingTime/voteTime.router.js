@@ -7,9 +7,13 @@ const voteTimeRouter = express.Router()
 
 
 voteTimeRouter.route('/')
-.post(  verifyJwt , allowedTo('admin'), voteTime.startVoting)
-.put( verifyJwt , allowedTo('admin'),voteTime.endVoting)
-.get( verifyJwt , allowedTo('admin' , 'voter' , 'candidate'),voteTime.getLastVoting)
+//verifyJwt , allowedTo('admin')
+.post(  voteTime.startVotingTime)
+.put( voteTime.endVotingTime)
+.delete( voteTime.deleteVotingTime)
+
+//verifyJwt , allowedTo('admin' , 'voter' , 'candidate'),
+.get( voteTime.getLastVotingTime)
 
 
 

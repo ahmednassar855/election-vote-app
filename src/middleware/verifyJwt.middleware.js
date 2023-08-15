@@ -1,17 +1,16 @@
 import Jwt from 'jsonwebtoken'
 import { AppError } from '../utils/AppError.js';
 
-export const verifyJwt = (req, res, next) => {
+export const verifyJwt =  (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    if (!authHeader) return res.sendStatus(401)
+    if (!authHeader || authHeader === undefined) return next(new AppError('Not Authorized !!!!!!!!', 401))
     // console.log(authHeader);  // bearer token
     const token = authHeader.split(' ')[1];
     Jwt.verify(
         token,
-        'TokenSecretKey',
-        (err, decoded) => {
-            if (err) return res.sendStatus(403)
-            console.log(decoded);
+        process.env.ACCESS_TOKEN_SECRET,
+        async (err, decoded) => {
+            if (err) return next(new AppError('Forbidden !!!!!!!!', 403))
             req.user = decoded;
             next()
         }

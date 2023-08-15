@@ -33,7 +33,8 @@ const deleteVoter = catchAsyncHandler(async (req, res, next) => {
 })
 
 const getUser = catchAsyncHandler(async (req, res, next) => {
-    let result = await userModel.findOne({ _id: req.params.id}).select('-password')
+    let user = req.user
+    let result = await userModel.findById(user._id).select('-password')
     if (!result) return next(new AppError('account is not  exist', 409))
     res.status(200).json({ message: "success", result })
 })
@@ -56,17 +57,17 @@ const updateUserRole = catchAsyncHandler(async (req, res, next) => {
     if (!checkUserId) return next(new AppError('account is not  exist', 409))
     let result = await userModel.findByIdAndUpdate(req.params.id, { role: userType }, { new: true }).select('-password')
     res.status(200).json({ message: "success", result })
-
 })
 
 const updatePhotoProflie = catchAsyncHandler ( async ( req , res , next ) => {
     // let user = req.user
     const { image } = req.body
     console.log(req.file);
-    let checkUserId = await userModel.findOne({ _id: req.user._id })
+    console.log(req.user.personal_id);
+    let checkUserId = await userModel.findOne({personal_id: req.user.personal_id })
     if (!checkUserId) return next(new AppError('account is not  exist', 409))
     
-    let result = await userModel.findByIdAndUpdate(req.user._id, { image : req.file.filename }, { new: true }).select('-password')
+    let result = await userModel.findByIdAndUpdate(checkUserId._id, { image : req.file.filename }, { new: true }).select('-password')
 
     res.status(200).json({ message: "uploade image successfully", result })
 

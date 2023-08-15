@@ -29,26 +29,38 @@ const candidateSchema = mongoose.Schema({
         default: "democrate",
         required: [true, 'political Party name is required'],
     },
-    agenda: [{ type: String }],
-    agendaSlug: [{ type: String }],
+    agenda_list: [{
+        summary: {
+            type: String,
+        },
+        abstraction: {
+            type: String,
+        }
+    }],
+    agendaSlug: [{
+        summary_slug: {
+            type: String
+        },
+        abstraction_slug: {
+            type: String
+        }
+    }],
     vote_count: {
         type: Number,
         default: 0
     },
-    user_id: {
-        type: mongoose.Types.ObjectId,
-        ref: "user"
-    },
     voter_id: [{
         type: mongoose.Types.ObjectId,
-        ref: "user"
+        ref: "voter"
     }],
-    vote_count : {
-        type : Number,
-        default : 0,
+    image: { 
+        type :String
     }
-    
 }, { timestamps: true })
+
+candidateSchema.post('init' ,(doc) => {
+    doc.image= process.env.BASE_URL+"/candidatePhoto/"+doc.image
+})
 
 
 export const candidateModel = mongoose.model('candidate', candidateSchema)

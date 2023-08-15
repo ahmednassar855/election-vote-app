@@ -16,15 +16,18 @@ userRouter.route('/voters')
 .get(verifyJwt , allowedTo('admin'), user.getAllVoters)
 
 userRouter.route('/candidates')
-.get(verifyJwt , allowedTo('admin'), user.getAllCandidates)
+.get(verifyJwt , allowedTo('admin' ,'voter'), user.getAllCandidates)
 
 userRouter.route('/:id')
 .delete( verifyJwt , allowedTo('admin'),user.deleteVoter)
 .patch( verifyJwt , allowedTo('admin'), user.activateUser)  
-.put(verifyJwt , allowedTo('admin'), user.updateUserRole)
-.get( verifyJwt , allowedTo('admin'),user.getUser)
+.put( verifyJwt , allowedTo('admin'), user.updateUserRole)
+
+
+userRouter.route('/userDetails')
+.get( verifyJwt ,user.getUser)
 
 userRouter.route('/updateProfile')
-.patch( verifyJwt , allowedTo('voter', 'candidate'), uploadSingleFile('image' , 'userPhoto'), user.updatePhotoProflie)
+.post( verifyJwt , uploadSingleFile('image' , 'userPhoto'), user.updatePhotoProflie)
 
 export default userRouter

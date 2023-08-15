@@ -12,7 +12,6 @@ export const uploadSingleFile = (fieldName , folderName) => {
         }
     })
     
-    
     function fileFilter(req, file, cb) {
         if (file.mimetype.startsWith('image')) {
             cb(null, true)
@@ -20,10 +19,6 @@ export const uploadSingleFile = (fieldName , folderName) => {
             cb(new AppError('image only', 400), false)
         }
     }
-    
     const upload = multer({ storage , fileFilter})
-
     return upload.single(fieldName)
-    
-    
 }
